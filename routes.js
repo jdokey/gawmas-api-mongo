@@ -11,10 +11,8 @@ function prepareQuery(queryObj) {
 
 routes.route('/hunt').get(async function (req, res) {
   const dbConnect = await dbo.getDb();
-  const query = prepareQuery(req.query);
-  // console.log(query);
   dbConnect.collection('hunt')
-    .find(query)
+    .find({}, { limit: req.query.limit, skip: req.query.skip | 0 })
     .toArray(function (err, result) {
       if (err) {
         res.status(400).send('Error fetching hunts!');
