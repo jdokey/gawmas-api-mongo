@@ -11,8 +11,14 @@ function prepareQuery(queryObj) {
 
 routes.route('/hunt').get(async function (req, res) {
   const dbConnect = await dbo.getDb();
+  
+  const limit = parseInt(req.query.limit); // Parse the limit parameter as an integer
+  const skip = parseInt(req.query.skip); // Parse the skip parameter as an integer
+  
   dbConnect.collection('hunt')
-    .find({}, { limit: req.query.limit, skip: req.query.skip | 0 })
+    .find({})
+    .limit(limit)
+    .skip(skip)
     .toArray(function (err, result) {
       if (err) {
         res.status(400).send('Error fetching hunts!');
@@ -21,6 +27,7 @@ routes.route('/hunt').get(async function (req, res) {
       }
     });
 });
+
 
 routes.route('/season').get(async function (req, res) {
   const dbConnect = await dbo.getDb();
